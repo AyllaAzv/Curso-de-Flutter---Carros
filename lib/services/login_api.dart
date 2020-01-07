@@ -21,13 +21,15 @@ class LoginApi {
 
       var response = await http.post(url, body: s, headers: headers);
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
       Map responseMap = json.decode(response.body);
 
       if (response.statusCode == 200) {
         Usuario user = Usuario.fromJson(responseMap);
+
+        user.save();
+
+        Usuario user2 = await Usuario.get();
+        print(user2);
 
         return ApiResponse.ok(user);
       }

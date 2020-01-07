@@ -1,9 +1,37 @@
-import 'package:carros/models/carro.dart';
 import 'package:carros/services/carros_api.dart';
+import 'package:carros/utils/prefs.dart';
+import 'package:carros/widgets/carros_listview.dart';
 import 'package:carros/widgets/drawer_list.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin<HomePage> {
+  TabController _tabController;
+
+  @override
+  initState() {
+    super.initState();
+
+    _initTabs();
+  }
+
+  void _initTabs() async {
+    _tabController = TabController(length: 3, vsync: this);
+
+    _tabController.index = await Prefs.getInt("tabIdx");
+
+    _tabController.addListener(() {
+      print("Tab ${_tabController.index}");
+
+      Prefs.setInt("tabIdx", _tabController.index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,51 +40,30 @@ class HomePage extends StatelessWidget {
           "Carros",
         ),
         centerTitle: true,
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: <Widget>[
+            Tab(
+              text: "Classicos",
+            ),
+            Tab(
+              text: "Esportivos",
+            ),
+            Tab(
+              text: "Luxo",
+            ),
+          ],
+        ),
       ),
-      body: _body(context),
+      body: TabBarView(
+        controller: _tabController,
+        children: <Widget>[
+          CarrosListView(TipoCarro.classicos),
+          CarrosListView(TipoCarro.esportivos),
+          CarrosListView(TipoCarro.luxo),
+        ],
+      ),
       drawer: DrawerList(),
-    );
-  }
-
-  _body(context) {
-    List<Carro> carros = CarrosApi.getCarros();
-
-    return ListView.builder(
-      itemCount: carros.length,
-      itemBuilder: (context, index) {
-        Carro carro = carros[index];
-
-        return Card(
-          color: Colors.grey[200],
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Center(
-                child: Image.network(
-                  carro.urlFoto,
-                  width: 250,
-                ),
-              ),
-              Text(
-                carro.nome,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 25,
-                ),
-              ),
-              Text(
-                "Descrição...",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
