@@ -16,7 +16,7 @@ class CarrosApi {
 
     Map<String, String> headers = {
       "Content-Type": "application/json",
-      "Authorization": "Bearer $user.token",
+      "Authorization": "Bearer " + user.token,
     };
 
     var url = 'http://carros-springboot.herokuapp.com/api/v2/carros/tipo/$tipo';
