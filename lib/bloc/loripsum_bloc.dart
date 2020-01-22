@@ -1,5 +1,5 @@
 import 'package:carros/bloc/simple_bloc.dart';
-import 'package:carros/services/loripsum_api.dart';
+import 'package:carros/api/loripsum_api.dart';
 
 class LoripsumBloc extends SimpleBloc<String> {
   static String lorim;
