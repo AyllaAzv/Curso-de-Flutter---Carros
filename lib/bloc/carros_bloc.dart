@@ -1,7 +1,7 @@
+import 'package:carros/api/carros_api.dart';
 import 'package:carros/bloc/simple_bloc.dart';
 import 'package:carros/dao/carro_dao.dart';
 import 'package:carros/models/carro.dart';
-import 'package:carros/api/carros_api.dart';
 import 'package:carros/utils/network.dart';
 
 class CarrosBloc extends SimpleBloc<List<Carro>> {

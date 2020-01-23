@@ -1,7 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carros/api/carros_api.dart';
 import 'package:carros/bloc/loripsum_bloc.dart';
+import 'package:carros/models/api_response.dart';
 import 'package:carros/models/carro.dart';
+import 'package:carros/pages/carro_form_page.dart';
 import 'package:carros/services/favorito_service.dart';
+import 'package:carros/utils/alert.dart';
+import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
 
@@ -166,10 +171,15 @@ class _CarroPageState extends State<CarroPage> {
   _onClickPopUpMenu(String valor) {
     switch (valor) {
       case "Editar":
-        print("Clicou em editar!");
+        push(
+          context,
+          CarroFormPage(
+            carro: carro,
+          ),
+        );
         break;
       case "Deletar":
-        print("Clicou em deletar!");
+        deletar();
         break;
       case "Compartilhar":
         print("Clicou em compartilhar!");
@@ -183,6 +193,18 @@ class _CarroPageState extends State<CarroPage> {
     setState(() {
       color = favorito ? Colors.red : Colors.grey;
     });
+  }
+
+  void deletar() async {
+    ApiResponse<bool> response = await CarrosApi.delete(carro);
+
+    if (response.ok) {
+      alert(context, "Carro deletado com sucesso", callback: () {
+        pop(context);
+      });
+    } else {
+      alert(context, response.msg);
+    }
   }
 
   void _onClickCompartilhar() {}
