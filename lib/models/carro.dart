@@ -23,11 +23,6 @@ class Carro extends Entity {
     this.longitude,
   });
 
-  String toJson() {
-    String json = convert.json.encode(toMap());
-    return json;
-  }
-
   Carro.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     nome = map['nome'];
@@ -51,5 +46,15 @@ class Carro extends Entity {
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
     return data;
+  }
+
+  String toJson() {
+    String json = convert.json.encode(toMap());
+    return json;
+  }
+
+  @override
+  String toString() {
+    return 'Carro{id: $id, nome: $nome, tipo: $tipo, descricao: $descricao, urlFoto: $urlFoto, urlVideo: $urlVideo, latitude: $latitude, longitude: $longitude}';
   }
 }
