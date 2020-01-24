@@ -1,10 +1,10 @@
-import 'package:carros/models/usuario.dart';
+import 'package:carros/pages/home_page.dart';
 import 'package:carros/pages/login_page.dart';
+import 'package:carros/services/firebase_service.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/utils/sql/db_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'home_page.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -16,16 +16,23 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
 
+    // Inicializar o banco de dados
     Future futureA = DatabaseHelper.getInstance().db;
+
     Future futureB = Future.delayed(Duration(seconds: 3));
-    Future<Usuario> futureC = Usuario.get();
+
+    // Usuario
+    Future<FirebaseUser> futureC = FirebaseAuth.instance.currentUser();
 
     Future.wait([futureA, futureB, futureC]).then((List values) {
-      Usuario user = values[2];
-      if (user != null) {
+      FirebaseUser fUser = values[2];
+
+      if (fUser != null) {
+        firebaseUserUid = fUser.uid;
+
         push(context, HomePage(), replace: true);
       } else {
-        push(context, LoginPage());
+        push(context, LoginPage(), replace: true);
       }
     });
   }

@@ -1,4 +1,3 @@
-import 'package:carros/models/favoritos_model.dart';
 import 'package:carros/pages/splash_page.dart';
 import 'package:carros/utils/event_bus.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +14,6 @@ class MyApp extends StatelessWidget {
           create: (context) => EventBus(),
           dispose: (context, bus) => bus.dispose(),
         ),
-        ChangeNotifierProvider<FavoritosModel>(
-          create: (context) => FavoritosModel(),
-        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

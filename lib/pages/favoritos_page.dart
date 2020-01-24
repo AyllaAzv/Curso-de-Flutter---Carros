@@ -1,9 +1,9 @@
 import 'package:carros/models/carro.dart';
-import 'package:carros/models/favoritos_model.dart';
+import 'package:carros/services/favorito_service.dart';
 import 'package:carros/utils/text_error.dart';
 import 'package:carros/widgets/carros_listview.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FavoritosPage extends StatefulWidget {
   @override
@@ -18,35 +18,31 @@ class _FavoritosPageState extends State<FavoritosPage>
   @override
   void initState() {
     super.initState();
-
-    FavoritosModel model = Provider.of<FavoritosModel>(context, listen: false);
-    model.getCarros();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    return StreamBuilder<QuerySnapshot>(
+      stream: FavoritoService().stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return TextError("Não foi possível buscar os carros");
+        }
 
-    FavoritosModel model = Provider.of<FavoritosModel>(context);
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-    List<Carro> carros = model.carros;
+        List<Carro> carros =
+            snapshot.data.documents.map((DocumentSnapshot document) {
+          return Carro.fromMap(document.data);
+        }).toList();
 
-    if (carros.isEmpty) {
-      return Center(
-        child: Text(
-          "Nenhum carro nos favoritos!",
-          style: TextStyle(fontSize: 20),
-        ),
-      );
-    }
-
-    return RefreshIndicator(
-      onRefresh: _onRefresh,
-      child: CarrosListView(carros),
+        return CarrosListView(carros);
+      },
     );
-  }
-
-  Future<void> _onRefresh() {
-    return Provider.of<FavoritosModel>(context, listen: false).getCarros();
   }
 }
