@@ -20,14 +20,14 @@ class _CarrosPageState extends State<CarrosPage>
     with AutomaticKeepAliveClientMixin<CarrosPage> {
   List<Carro> carros;
 
-  final _bloc = CarrosBloc();
+  StreamSubscription<Event> subscription;
 
-  StreamSubscription<Event> subscrition;
+  String get tipo => widget.tipo;
+
+  final _bloc = CarrosBloc();
 
   @override
   bool get wantKeepAlive => true;
-
-  String get tipo => widget.tipo;
 
   @override
   void initState() {
@@ -35,10 +35,11 @@ class _CarrosPageState extends State<CarrosPage>
 
     _bloc.fetch(tipo);
 
+    // Escutando uma stream
     final bus = EventBus.get(context);
-    subscrition = bus.stream.listen((Event e) {
+    subscription = bus.stream.listen((Event e) {
+      print("Event $e");
       CarroEvent carroEvent = e;
-
       if (carroEvent.tipo == tipo) {
         _bloc.fetch(tipo);
       }
@@ -53,9 +54,7 @@ class _CarrosPageState extends State<CarrosPage>
       stream: _bloc.stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          print(snapshot.error);
-
-          return TextError("Não foi possível carregar a lista de carros!");
+          return TextError("Não foi possível buscar os carros");
         }
 
         if (!snapshot.hasData) {
@@ -75,7 +74,7 @@ class _CarrosPageState extends State<CarrosPage>
   }
 
   Future<void> _onRefresh() {
-    return _bloc.fetch(widget.tipo);
+    return _bloc.fetch(tipo);
   }
 
   @override
@@ -83,6 +82,6 @@ class _CarrosPageState extends State<CarrosPage>
     super.dispose();
 
     _bloc.dispose();
-    subscrition.cancel();
+    subscription.cancel();
   }
 }

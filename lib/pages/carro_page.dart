@@ -4,12 +4,15 @@ import 'package:carros/bloc/loripsum_bloc.dart';
 import 'package:carros/models/api_response.dart';
 import 'package:carros/models/carro.dart';
 import 'package:carros/pages/carro_form_page.dart';
+import 'package:carros/pages/mapa_page.dart';
+import 'package:carros/pages/video_page.dart';
 import 'package:carros/services/favorito_service.dart';
 import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/event_bus.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CarroPage extends StatefulWidget {
   Carro carro;
@@ -25,7 +28,7 @@ class _CarroPageState extends State<CarroPage> {
 
   Color color = Colors.grey;
 
-  get carro => widget.carro;
+  Carro get carro => widget.carro;
 
   @override
   void initState() {
@@ -48,11 +51,11 @@ class _CarroPageState extends State<CarroPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.place),
-            onPressed: _onClickMapa,
+            onPressed: () => _onClickMapa(context),
           ),
           IconButton(
             icon: Icon(Icons.videocam),
-            onPressed: _onClickVideo,
+            onPressed: () => _onClickVideo(context),
           ),
           _menu(),
         ],
@@ -165,9 +168,22 @@ class _CarroPageState extends State<CarroPage> {
     );
   }
 
-  _onClickMapa() {}
+  _onClickMapa(context) {
+     if(carro.longitude != null && carro.latitude != null) {
+       push(context, MapaPage(carro));
+    } else {
+      alert(context, "Este carro não possui nenhum mapa!", title: "Erro",);
+    }
+  }
 
-  _onClickVideo() {}
+  _onClickVideo(context) {
+    if(carro.urlVideo != null && carro.urlVideo.isNotEmpty) {
+      // launch(carro.urlVideo);
+      push(context, VideoPage(carro));
+    } else {
+      alert(context, "Este carro não possui nenhum vídeo!", title: "Erro",);
+    }
+  }
 
   _onClickPopUpMenu(String valor) {
     switch (valor) {

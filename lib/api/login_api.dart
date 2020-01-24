@@ -31,14 +31,14 @@ class LoginApi {
         Usuario user2 = await Usuario.get();
         print(user2);
 
-        return ApiResponse.ok(user);
+        return ApiResponse.ok(result: user);
       }
 
-      return ApiResponse.error(responseMap["error"]);
+      return ApiResponse.error(msg: responseMap["error"]);
     } catch (error, exception) {
       print("Erro no login $error > $exception");
 
-      return ApiResponse.error("Não foi possível fazer o login.");
+      return ApiResponse.error(msg: "Não foi possível fazer o login.");
     }
   }
 }

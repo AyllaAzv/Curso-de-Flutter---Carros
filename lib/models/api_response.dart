@@ -3,7 +3,7 @@ class ApiResponse<T> {
   String msg;
   T result;
 
-  ApiResponse.ok(this.result) : ok = true;
+  ApiResponse.ok({this.result, this.msg}) : ok = true;
 
-  ApiResponse.error(this.msg) : ok = false;
+  ApiResponse.error({this.result, this.msg}) : ok = false;
 }

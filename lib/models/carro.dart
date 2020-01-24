@@ -2,6 +2,7 @@ import 'dart:convert' as convert;
 
 import 'package:carros/models/entity.dart';
 import 'package:carros/utils/event_bus.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CarroEvent extends Event {
   String acao;
@@ -35,6 +36,10 @@ class Carro extends Entity {
     this.latitude,
     this.longitude,
   });
+
+  get latlng => LatLng(
+      latitude == null || latitude.isEmpty ? 0.0 : double.parse(latitude),
+      longitude == null || longitude.isEmpty ? 0.0 : double.parse(longitude));
 
   Carro.fromMap(Map<String, dynamic> map) {
     id = map['id'];

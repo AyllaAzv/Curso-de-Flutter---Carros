@@ -19,7 +19,6 @@ class CarrosListView extends StatelessWidget {
           Carro carro = carros[index];
 
           return Container(
-            height: 280,
             child: InkWell(
               onTap: () {
                 _onClickCarro(context, carro);
