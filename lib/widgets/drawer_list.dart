@@ -1,5 +1,6 @@
 import 'package:carros/models/usuario.dart';
 import 'package:carros/pages/login_page.dart';
+import 'package:carros/pages/site_page.dart';
 import 'package:carros/services/firebase_service.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class DrawerList extends StatelessWidget {
               builder: (context, snapshot) {
                 Usuario user = snapshot.data;
 
-                return user != null ?_header(user) : Container();
+                return user != null ? _header(user) : Container();
               },
             ),
             ListTile(
@@ -27,7 +28,6 @@ class DrawerList extends StatelessWidget {
               subtitle: Text("Mais informações"),
               trailing: Icon(Icons.arrow_forward),
               onTap: () {
-                print("Item 1");
                 Navigator.pop(context);
               },
             ),
@@ -37,8 +37,15 @@ class DrawerList extends StatelessWidget {
               subtitle: Text("Mais informações"),
               trailing: Icon(Icons.arrow_forward),
               onTap: () {
-                print("Item 2");
                 Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.web),
+              title: Text("Visite o site"),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: () {
+                _onClickSite(context);
               },
             ),
             ListTile(
@@ -74,5 +81,10 @@ class DrawerList extends StatelessWidget {
     FirebaseService().logout();
     Navigator.pop(context);
     push(context, LoginPage(), replace: true);
+  }
+
+  _onClickSite(context) {
+    Navigator.pop(context);
+    push(context, SitePage());
   }
 }
