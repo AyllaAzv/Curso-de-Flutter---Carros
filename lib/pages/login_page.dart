@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:carros/bloc/login_bloc.dart';
+import 'package:carros/firebase.dart';
 import 'package:carros/models/api_response.dart';
 import 'package:carros/models/usuario.dart';
 import 'package:carros/pages/cadastro_page.dart';
@@ -12,6 +13,7 @@ import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -32,6 +34,23 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+
+    // initFcm();
+
+    RemoteConfig.instance.then((remoteConfig) {
+      remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
+
+      try {
+        remoteConfig.fetch(expiration: const Duration(minutes: 1));
+        remoteConfig.activateFetched();
+      } catch (error) {
+        print("Remote Config: $error");
+      }
+
+      final mensagem = remoteConfig.getString("mensagem");
+
+      print('Mensagem: $mensagem');
+    });
   }
 
   @override
